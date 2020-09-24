@@ -1,8 +1,9 @@
 import { createStore } from "redux";
-import rootReducer from "./reducers";
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk';
 import {applyMiddleware} from 'redux';
+import { combineReducers } from "redux";
+import { reducer as zoneReducer } from './ducks/zone.ducks';
 
 export default function configureStore(preloadedState) {
     const middlewares = [thunkMiddleware]
@@ -11,11 +12,9 @@ export default function configureStore(preloadedState) {
     const enhancers = [middlewareEnhancer]
     const composedEnhancers = composeWithDevTools(...enhancers)
   
+    const rootReducer = combineReducers({zoneReducer});
+
     const store = createStore(rootReducer, preloadedState, composedEnhancers)
-  
-    if (process.env.NODE_ENV !== 'production' && module.hot) {
-      module.hot.accept('./reducers', () => store.replaceReducer(rootReducer))
-    }
-  
+
     return store
   }
